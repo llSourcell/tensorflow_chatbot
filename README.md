@@ -42,7 +42,7 @@ Challenge
 
 The challenge for this video is write a script using [TF Learn](http://tflearn.org/) to generate Lord of the Ring style sentences. Check out this [example](https://github.com/tflearn/tflearn/blob/master/examples/nlp/lstm_generator_shakespeare.py), it uses TF Learn to generate Shakespeare-style sentences. Train your model on Lord of the rings text to do something similar! And play around with the hyperparameters to get a more accurate result. 
 
-###Due date: December 9th
+###Due date: December 8th
 
 Credits
 ===========
