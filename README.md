@@ -44,6 +44,9 @@ The challenge for this video is write an entirely different script using [TF Lea
 
 ###Due date: December 8th
 
+Also see this issue, some people have found this discussion helpful
+https://github.com/llSourcell/tensorflow_chatbot/issues/3
+
 Credits
 ===========
 Credit for the vast majority of code here goes to [suriyadeepan](https://github.com/suriyadeepan). I've merely created a wrapper to get people started. 
