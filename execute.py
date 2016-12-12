@@ -108,7 +108,11 @@ def create_model(session, forward_only):
       return model
 
   ckpt = tf.train.get_checkpoint_state(gConfig['working_directory'])
-  if ckpt and tf.gfile.Exists(ckpt.model_checkpoint_path):
+  # the checkpoint filename has changed in recent versions of tensorflow
+  checkpoint_suffix = ""
+  if tf.__version__ > "0.12":
+      checkpoint_suffix = ".index"
+  if ckpt and tf.gfile.Exists(ckpt.model_checkpoint_path + checkpoint_suffix):
     print("Reading model parameters from %s" % ckpt.model_checkpoint_path)
     model.saver.restore(session, ckpt.model_checkpoint_path)
   else:
@@ -122,8 +126,9 @@ def train():
   print("Preparing data in %s" % gConfig['working_directory'])
   enc_train, dec_train, enc_dev, dec_dev, _, _ = data_utils.prepare_custom_data(gConfig['working_directory'],gConfig['train_enc'],gConfig['train_dec'],gConfig['test_enc'],gConfig['test_dec'],gConfig['enc_vocab_size'],gConfig['dec_vocab_size'])
 
-  # setup config to use BFC allocator
-  config = tf.ConfigProto()  
+  # Only allocate 2/3 of the gpu memory to allow for running gpu-based predictions while training:
+  gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.666)
+  config = tf.ConfigProto(gpu_options=gpu_options)
   config.gpu_options.allocator_type = 'BFC'
 
   with tf.Session(config=config) as sess:
@@ -196,7 +201,12 @@ def train():
 
 
 def decode():
-  with tf.Session() as sess:
+
+  # Only allocate part of the gpu memory when predicting.
+  gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.2)
+  config = tf.ConfigProto(gpu_options=gpu_options)
+
+  with tf.Session(config=config) as sess:
     # Create model and load parameters.
     model = create_model(sess, True)
     model.batch_size = 1  # We decode one sentence at a time.
