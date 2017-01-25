@@ -1,7 +1,13 @@
 #Tensorflow Chatbot
 Tensorflow Chatbot Demo by @Sirajology on [Youtube](https://youtu.be/SJDEOWLHYVo)
 
-Note from HazeHub : This fork hasn't been updated for the moment. I have all the correct code to make it work with Python 3.5 and tensorflow 0.12 on my local storage. Give me a few days and this should be updated.
+Note from HazeHub :
+====
+21/01/16 : The few days have taken longer than expected. Still haven't had the time to work on a proper modification so I decided to add my personal version of the tensorflow chatbot with all the generated files from Cornell's Corpus. Just extract the zip file, train the bot and you should be allright !
+
+old : This fork hasn't been updated for the moment. I have all the correct code to make it work with Python 3.5 and tensorflow 0.12 on my local storage. Give me a few days and this should be updated.
+
+
 
 Overview
 ============
