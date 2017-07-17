@@ -18,9 +18,11 @@ Use [pip](https://pypi.python.org/pypi/pip) to install any missing dependencies
 
 Setup
 ===========
-  1.Install the dependencies that are required above
-  2.Follow steps in Data Folder to create the Movie Files
-  3.Follow instructions in Usage
+  1.Install the dependencies that are required above  
+  
+  2.Follow steps in Data Folder to create the Movie Files 
+  
+  3.Follow instructions in Usage  
   
 
 Usage
