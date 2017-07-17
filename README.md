@@ -12,10 +12,16 @@ Dependencies
 * numpy
 * scipy 
 * six
-* tensorflow (https://www.tensorflow.org/versions/r0.12/get_started/os_setup.html)
+* tensorflow **Version r0.12** (https://www.tensorflow.org/versions/r0.12/get_started/os_setup.html)
 
 Use [pip](https://pypi.python.org/pypi/pip) to install any missing dependencies
 
+Setup
+===========
+  1.Install the dependencies that are required above
+  2.Follow steps in Data Folder to create the Movie Files
+  3.Follow instructions in Usage
+  
 
 Usage
 ===========
@@ -44,8 +50,6 @@ The challenge for this video is write an entirely different script using [TF Lea
 
 ###Due date: December 8th
 
-Also see this issue, some people have found this discussion helpful
-https://github.com/llSourcell/tensorflow_chatbot/issues/3
 
 Credits
 ===========
