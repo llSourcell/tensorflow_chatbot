@@ -19,6 +19,13 @@ Use [pip](https://pypi.python.org/pypi/pip) to install any missing dependencies
 
 Usage
 ===========
+First, go to the tensorflow_chatbot directory and create a new folder called data.
+
+ Download the following files:
+1. [test.enc](https://www.dropbox.com/s/ncfa5t950gvtaeb/test.enc?dl=0)
+2. [test.dec](https://www.dropbox.com/s/48ro4759jaikque/test.dec?dl=0)
+3. [train.enc](https://www.dropbox.com/s/gu54ngk3xpwite4/train.enc?dl=0)
+4. [train.dec](https://www.dropbox.com/s/g3z2msjziqocndl/train.dec?dl=0)
 
 To train the bot, edit the `seq2seq.ini` file so that mode is set to train like so
 
@@ -35,6 +42,7 @@ To test the bot during or after training, edit the `seq2seq.ini` file so that mo
 then run the code like so
 
 ``python execute.py``
+
 
 
 Challenge
