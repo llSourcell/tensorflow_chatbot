@@ -25,7 +25,15 @@ import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
 
-from tensorflow.models.rnn.translate import data_utils
+#from tensorflow.models.rnn.translate import data_utils
+#fixes  File "execute.py", line 31, in <module>
+    #import seq2seq_model
+  #File "C:\PYTHONCODE\Tensorflow\chatbot\tensorflow_chatbot\seq2seq_model.py", l
+#ine 28, in <module>
+    #from tensorflow.models.rnn.translate import data_utils
+#ModuleNotFoundError: No module named 'tensorflow.models'
+import data_utils
+
 
 
 class Seq2SeqModel(object):
