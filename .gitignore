@@ -1,4 +1,5 @@
 data/
+working_dir/
 *.pyc
 .venv/
 .idea/
