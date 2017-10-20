@@ -22,7 +22,6 @@ import os
 import re
 from io import open
 from collections import Counter
-from six.moves import urllib
 
 from tensorflow.python.platform import gfile
 
@@ -47,10 +46,13 @@ CORNELL_MOVIE_CORPUS_ENCODING = 'ISO-8859-2'
 
 def basic_tokenizer(sentence):
     """Very basic tokenizer: split the sentence into a list of tokens."""
-    words = []
+    all_words = []
     for space_separated_fragment in sentence.strip().split():
-        words.extend(re.split(_WORD_SPLIT, space_separated_fragment))
-    return [w for w in words if w]
+        words = re.split(_WORD_SPLIT, space_separated_fragment)
+        for word in words:
+            if word:
+                all_words.append(word)
+    return all_words
 
 
 def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size,
@@ -58,44 +60,52 @@ def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size,
     if not tokenizer:
         tokenizer = basic_tokenizer
 
-    if not gfile.Exists(vocabulary_path):
+    if not os.path.exists(vocabulary_path):
         print("Creating vocabulary %s from %s" % (vocabulary_path, data_path))
         vocab = Counter()
-        with gfile.GFile(data_path, mode="rb") as f:
-            for counter, line in enumerate(f, 1):
+        with open(data_path, 'rt', encoding='utf8') as f:
+            for counter, sentence in enumerate(f, 1):
                 if counter % 100000 == 0:
                     print("  processing line %d" % counter)
-                tokens = tokenizer(line)
+                tokens = tokenizer(sentence)
                 for w in tokens:
-                    word = re.sub(_DIGIT_RE, '0', w) if normalize_digits else w
+                    if normalize_digits:
+                        word = re.sub(_DIGIT_RE, '0', w)
+                    else:
+                        word = w
                     vocab[word] += 1
 
             vocab_list = _START_VOCAB + sorted(vocab, key=vocab.get, reverse=True)
             print('>> Full Vocabulary Size :', len(vocab_list))
             if len(vocab_list) > max_vocabulary_size:
                 vocab_list = vocab_list[:max_vocabulary_size]
+                print('>>>> Vocab Truncated to: {}'.format(max_vocabulary_size))
             with open(vocabulary_path, 'wt', encoding='utf8') as vocab_file:
                 for w in vocab_list:
                     vocab_file.write(w + '\n')
 
 
 def initialize_vocabulary(vocabulary_path, encoding=CORNELL_MOVIE_CORPUS_ENCODING):
+    vocab = {}
+    rev_vocab = []
     if gfile.Exists(vocabulary_path):
-        rev_vocab = []
-        with open(vocabulary_path, 'r', encoding=encoding) as f:
-            rev_vocab.extend(f.readlines())
-        rev_vocab = [line.strip() for line in rev_vocab]
-        vocab = dict([(x, y) for (y, x) in enumerate(rev_vocab)])
-        return vocab, rev_vocab
+        with open(vocabulary_path, 'rt', encoding=encoding) as f:
+            for index, line in enumerate(f, 1):
+                element = line.strip()
+                rev_vocab.append(element)
+                vocab[element] = index
+        assert len(vocab) == len(rev_vocab)
+        if not (vocab and rev_vocab):
+            raise ValueError('File empty: {}'.format(vocabulary_path))
     else:
         raise ValueError("Vocabulary file %s not found.", vocabulary_path)
+    return vocab, rev_vocab
 
 
 def sentence_to_token_ids(sentence, vocabulary, tokenizer=None, normalize_digits=True):
-    if tokenizer:
-        words = tokenizer(sentence)
-    else:
-        words = basic_tokenizer(sentence)
+    if not tokenizer:
+        tokenizer = basic_tokenizer
+    words = tokenizer(sentence)
     if not normalize_digits:
         return [vocabulary.get(w, UNK_ID) for w in words]
     # Normalize digits by 0 before looking words up in the vocabulary.
