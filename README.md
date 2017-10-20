@@ -20,22 +20,62 @@ Use [pip](https://pypi.python.org/pypi/pip) to install any missing dependencies
 Usage
 ===========
 
-To train the bot, edit the `seq2seq.ini` file so that mode is set to train like so
+Create venv & install dependencies:
+
+> Using viritualenv here to be compatable with python2, install with "pip install virtualenv"
+
+```
+# create venv
+python -m virtualenv .venv
+
+# enter venv (assuming macos/linux)
+source .venv/bin/activate
+
+# install requirements
+pip install -r requirements.txt
+```
+
+Training
+--------------------
+
+1. Download the [Cornell Movie Dialogue dataset](https://www.cs.cornell.edu/~cristian/Cornell_Movie-Dialogs_Corpus.html) and place the unzipped content in the `data/` directory.
+
+2. Prepare data for training, in the `data/` directory, run the `prepare_data.py` script
+
+3. To train the bot, edit the `seq2seq.ini` file so that mode is set to train like so
 
 `mode = train`
 
-then run the code like so
+4. Start training, by running the code like so:
 
-``python execute.py``
+    ``python execute.py``
 
-To test the bot during or after training, edit the `seq2seq.ini` file so that mode is set to test like so
+> There is no mechanism to stop training, you will need to 'ctrl-c' to stop training after a period of time.
 
-`mode = test`
 
-then run the code like so
+Test
+-------------
 
-``python execute.py``
+1. To test the bot during or after training, edit the `seq2seq.ini` file so that mode is set to test like so
 
+    `mode = test`
+
+2. To test run the code like so:
+
+    ```
+    python execute.py
+
+    >> Mode : test
+
+    Reading model parameters from working_dir/seq2seq.ckpt-10200
+    >    
+    ```
+
+    
+
+3. Confrim... 
+    - What does "Test do?"
+    - How to use it?
 
 Challenge
 ===========

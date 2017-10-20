@@ -225,20 +225,31 @@ def decode():
     while sentence:
       # Get token-ids for the input sentence.
       token_ids = data_utils.sentence_to_token_ids(tf.compat.as_bytes(sentence), enc_vocab)
+      print(token_ids)  # debug
+
       # Which bucket does it belong to?
       bucket_id = min([b for b in xrange(len(_buckets))
                        if _buckets[b][0] > len(token_ids)])
+
       # Get a 1-element batch to feed the sentence to the model.
       encoder_inputs, decoder_inputs, target_weights = model.get_batch(
           {bucket_id: [(token_ids, [])]}, bucket_id)
+
       # Get output logits for the sentence.
-      _, _, output_logits = model.step(sess, encoder_inputs, decoder_inputs,
-                                       target_weights, bucket_id, True)
+      _, _, output_logits = model.step(sess,
+                                       encoder_inputs,
+                                       decoder_inputs,
+                                       target_weights,
+                                       bucket_id,
+                                       True)
       # This is a greedy decoder - outputs are just argmaxes of output_logits.
       outputs = [int(np.argmax(logit, axis=1)) for logit in output_logits]
+      print('outputs: {}'.format(outputs))
+
       # If there is an EOS symbol in outputs, cut them at that point.
       if data_utils.EOS_ID in outputs:
         outputs = outputs[:outputs.index(data_utils.EOS_ID)]
+
       # Print out French sentence corresponding to outputs.
       print(" ".join([tf.compat.as_str(rev_dec_vocab[output]) for output in outputs]))
       print("> ", end="")
@@ -321,8 +332,5 @@ if __name__ == '__main__':
         # interactive decode
         decode()
     else:
-        # wrong way to execute "serve"
-        #   Use : >> python ui/app.py
-        #           uses seq2seq_serve.ini as conf file
-        print('Serve Usage : >> python ui/app.py')
-        print('# uses seq2seq_serve.ini as conf file')
+        print('Invalid mode ({}) must be in (train, test)!'.format(gConfig['mode']))
+

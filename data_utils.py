@@ -20,7 +20,8 @@ from __future__ import print_function
 
 import os
 import re
-
+from io import open
+from collections import Counter
 from six.moves import urllib
 
 from tensorflow.python.platform import gfile
@@ -41,6 +42,7 @@ UNK_ID = 3
 _WORD_SPLIT = re.compile(b"([.,!?\"':;)(])")
 _DIGIT_RE = re.compile(br"\d")
 
+CORNELL_MOVIE_CORPUS_ENCODING = 'ISO-8859-2'
 
 
 def basic_tokenizer(sentence):
@@ -56,7 +58,7 @@ def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size,
     
   if not gfile.Exists(vocabulary_path):
     print("Creating vocabulary %s from %s" % (vocabulary_path, data_path))
-    vocab = {}
+    vocab = Counter()
     with gfile.GFile(data_path, mode="rb") as f:
       counter = 0
       for line in f:
@@ -66,10 +68,8 @@ def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size,
         tokens = tokenizer(line) if tokenizer else basic_tokenizer(line)
         for w in tokens:
           word = re.sub(_DIGIT_RE, b"0", w) if normalize_digits else w
-          if word in vocab:
-            vocab[word] += 1
-          else:
-            vocab[word] = 1
+          vocab[word] += 1
+
       vocab_list = _START_VOCAB + sorted(vocab, key=vocab.get, reverse=True)
       print('>> Full Vocabulary Size :',len(vocab_list))
       if len(vocab_list) > max_vocabulary_size:
@@ -79,11 +79,11 @@ def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size,
           vocab_file.write(w + b"\n")
 
 
-def initialize_vocabulary(vocabulary_path):
+def initialize_vocabulary(vocabulary_path, encoding=CORNELL_MOVIE_CORPUS_ENCODING):
 
   if gfile.Exists(vocabulary_path):
     rev_vocab = []
-    with gfile.GFile(vocabulary_path, mode="rb") as f:
+    with open(vocabulary_path, 'r', encoding=encoding) as f:
       rev_vocab.extend(f.readlines())
     rev_vocab = [line.strip() for line in rev_vocab]
     vocab = dict([(x, y) for (y, x) in enumerate(rev_vocab)])
