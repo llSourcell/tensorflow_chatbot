@@ -4,6 +4,7 @@ A corpus parser for preparing data for a tensorflow chatbot
 import os
 import random
 from ast import literal_eval
+from io import open
 
 
 DELIM = ' +++$+++ '
