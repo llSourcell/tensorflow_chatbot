@@ -39,8 +39,8 @@ EOS_ID = 2
 UNK_ID = 3
 
 # Regular expressions used to tokenize.
-_WORD_SPLIT = re.compile(b"([.,!?\"':;)(])")
-_DIGIT_RE = re.compile(br"\d")
+_WORD_SPLIT = re.compile("([.,!?\"':;)(])")
+_DIGIT_RE = re.compile(r"\d")
 
 CORNELL_MOVIE_CORPUS_ENCODING = 'ISO-8859-2'
 
@@ -55,6 +55,8 @@ def basic_tokenizer(sentence):
 
 def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size,
                       tokenizer=None, normalize_digits=True):
+  if not tokenizer:
+    tokenizer = basic_tokenizer
     
   if not gfile.Exists(vocabulary_path):
     print("Creating vocabulary %s from %s" % (vocabulary_path, data_path))
@@ -65,18 +67,18 @@ def create_vocabulary(vocabulary_path, data_path, max_vocabulary_size,
         counter += 1
         if counter % 100000 == 0:
           print("  processing line %d" % counter)
-        tokens = tokenizer(line) if tokenizer else basic_tokenizer(line)
+        tokens = tokenizer(line)
         for w in tokens:
-          word = re.sub(_DIGIT_RE, b"0", w) if normalize_digits else w
+          word = re.sub(_DIGIT_RE, '0', w) if normalize_digits else w
           vocab[word] += 1
 
       vocab_list = _START_VOCAB + sorted(vocab, key=vocab.get, reverse=True)
       print('>> Full Vocabulary Size :',len(vocab_list))
       if len(vocab_list) > max_vocabulary_size:
         vocab_list = vocab_list[:max_vocabulary_size]
-      with gfile.GFile(vocabulary_path, mode="wb") as vocab_file:
+      with open(vocabulary_path, 'wt', encoding='utf8') as vocab_file:
         for w in vocab_list:
-          vocab_file.write(w + b"\n")
+          vocab_file.write(w + '\n')
 
 
 def initialize_vocabulary(vocabulary_path, encoding=CORNELL_MOVIE_CORPUS_ENCODING):
@@ -101,7 +103,7 @@ def sentence_to_token_ids(sentence, vocabulary, tokenizer=None, normalize_digits
   if not normalize_digits:
     return [vocabulary.get(w, UNK_ID) for w in words]
   # Normalize digits by 0 before looking words up in the vocabulary.
-  return [vocabulary.get(re.sub(_DIGIT_RE, b"0", w), UNK_ID) for w in words]
+  return [vocabulary.get(re.sub(_DIGIT_RE, '0', w), UNK_ID) for w in words]
 
 
 def data_to_token_ids(data_path, target_path, vocabulary_path,
@@ -112,15 +114,12 @@ def data_to_token_ids(data_path, target_path, vocabulary_path,
     vocab, _ = initialize_vocabulary(vocabulary_path)
     with gfile.GFile(data_path, mode="rb") as data_file:
       with gfile.GFile(target_path, mode="w") as tokens_file:
-        counter = 0
-        for line in data_file:
-          counter += 1
+        for counter, line in enumerate(data_file, 1):
           if counter % 100000 == 0:
             print("  tokenizing line %d" % counter)
           token_ids = sentence_to_token_ids(line, vocab, tokenizer,
                                             normalize_digits)
           tokens_file.write(" ".join([str(tok) for tok in token_ids]) + "\n")
-
 
 
 def prepare_custom_data(working_directory, train_enc, train_dec, test_enc, test_dec, enc_vocabulary_size, dec_vocabulary_size, tokenizer=None):
