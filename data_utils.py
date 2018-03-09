@@ -144,3 +144,4 @@ def prepare_custom_data(working_directory, train_enc, train_dec, test_enc, test_
     data_to_token_ids(test_dec, dec_dev_ids_path, dec_vocab_path, tokenizer)
 
     return (enc_train_ids_path, dec_train_ids_path, enc_dev_ids_path, dec_dev_ids_path, enc_vocab_path, dec_vocab_path)
+
