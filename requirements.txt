@@ -1,0 +1,5 @@
+numpy=1.13.3
+scipy==0.19.1
+six==1.11.0
+tensorflow==0.12.1
+
