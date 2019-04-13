@@ -40,19 +40,25 @@ else:
     reload(sys).setdefaultencoding('utf-8')
     
 try:
-    from ConfigParser import SafeConfigParser
+    from configparser import ConfigParser
 except:
-    from configparser import SafeConfigParser # In Python 3, ConfigParser has been renamed to configparser for PEP 8 compliance.
+    from configparser import ConfigParser # In Python 3, ConfigParser has been renamed to configparser for PEP 8 compliance.
     
 gConfig = {}
 
-def get_config(config_file='seq2seq.ini'):
-    parser = SafeConfigParser()
+def get_config(config_file='/Users/ajay/Desktop/tensorflow_chatbot/seq2seq.ini'):
+    parser = ConfigParser()
     parser.read(config_file)
     # get the ints, floats and strings
     _conf_ints = [ (key, int(value)) for key,value in parser.items('ints') ]
+    #_conf_ints = [('enc_vocab_size', 20000), ('dec_vocab_size', 20000), ('num_layers', 3), ('layer_size', 256),
+                  #('max_train_data_size', 0), ('batch_size', 64), ('steps_per_checkpoint', 300)]
     _conf_floats = [ (key, float(value)) for key,value in parser.items('floats') ]
+    #_conf_floats = [('learning_rate', 0.5), ('learning_rate_decay_factor', 0.99), ('max_gradient_norm', 5.0)]
     _conf_strings = [ (key, str(value)) for key,value in parser.items('strings') ]
+    #_conf_strings = [('mode', 'test'), ('train_enc', 'data/train.enc'), ('train_dec',
+                                                                         #'data/train.dec'), ('test_enc','data/test.enc')
+        #, ('test_dec', 'data/test.dec'), ('working_directory', '/Users/ajay/Desktop/tensorflow_chatbot/working_dir')]
     return dict(_conf_ints + _conf_floats + _conf_strings)
 
 # We use a number of buckets and pad to the closest one for efficiency.
