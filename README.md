@@ -1,5 +1,5 @@
 # Tensorflow Chatbot
-Tensorflow Chatbot Demo by @Sirajology on [Youtube](https://youtu.be/SJDEOWLHYVo)
+Chatbot made using tensor flow and trained using Cornell movie dialouge corpus .
 
 Overview
 ============
@@ -36,17 +36,24 @@ then run the code like so
 
 ``python execute.py``
 
+To run along with UI on your web browser :
 
-Challenge
-===========
+- install flask on your venv
+- open execute.py 
+ 
+ comment this _conf_ints = [ (key, int(value)) for key,value in parser.items('ints') ]
+ uncomment the assignement below it for _conf_ints
+ 
+ comment this _conf_floats = [ (key, float(value)) for key,value in parser.items('floats') ]
+ uncomment the assignement below it for _conf_floats
+ 
+ comment this _conf_strings = [ (key, str(value)) for key,value in parser.items('strings') ]
+ uncomment the assignement below it for _conf_strings
 
-The challenge for this video is write an entirely different script using [TF Learn](http://tflearn.org/) to generate Lord of the Ring style sentences. Check out this very similar [example](https://github.com/tflearn/tflearn/blob/master/examples/nlp/lstm_generator_shakespeare.py), it uses TF Learn to generate Shakespeare-style sentences. Train your model on Lord of the rings text to do something similar! And play around with the hyperparameters to get a more accurate result. Post your GitHub link in the video comments and I'll judge it! 
 
-### Due date: December 8th
+- run ui/app.py
 
-Also see this issue, some people have found this discussion helpful
-https://github.com/llSourcell/tensorflow_chatbot/issues/3
 
 Credits
 ===========
-Credit for the vast majority of code here goes to [suriyadeepan](https://github.com/suriyadeepan). I've merely created a wrapper to get people started. 
+Credit for the vast majority of code here goes to siraj and  [suriyadeepan]
